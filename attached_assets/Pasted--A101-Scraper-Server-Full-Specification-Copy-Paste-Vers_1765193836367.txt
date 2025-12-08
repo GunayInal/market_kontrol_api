@@ -1,0 +1,139 @@
+✅ A101 Scraper Server – Full Specification (Copy-Paste Version)
+1. Constants
+
+A101_HOMEPAGE_URL = "https://www.a101.com.tr/kapida"
+
+A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='/kapida/']"
+
+A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='/kapida/'] img"
+
+2. Homepage Scraper
+
+Extract from the homepage:
+
+Detect all campaign entries using:
+
+Primary selector: div.swiper-slide a[href*='/kapida/']
+
+Fallback selector: a[href*='/kapida/'] img
+
+Extract:
+
+Campaign title (from image alt or inferred from URL)
+
+Image URL (<img src="..." />)
+
+Campaign link (href="https://www.a101.com.tr/kapida/...)
+
+Save raw homepage HTML to /data/a101-homepage.html (debugging)
+
+3. Campaign Page Scraper
+
+For each campaign page:
+
+Load campaign URL
+
+Parse:
+
+window.__INITIAL_STATE__ object (primary method)
+
+Script tags for embedded JSON
+
+Any URLs matching product API patterns
+
+Detect all infinite scroll API calls:
+
+Could be 1, 2, 5, or even 9 pages depending on product count
+
+Return:
+
+All API endpoints
+
+Total product count (if available)
+
+Campaign metadata
+
+4. Data Storage
+
+Store campaigns in-memory and persist to JSON:
+
+/data/a101-campaigns.json
+
+/data/a101-api-endpoints.json
+
+Include versioning:
+
+{
+  "market": "A101",
+  "version": "1.0",
+  "campaignTitle": "",
+  "url": "",
+  "image": "",
+  "apiEndpoints": []
+}
+
+5. Server (REST API Endpoints)
+GET /campaigns
+
+Returns all detected campaigns.
+
+GET /campaigns/:id
+
+Returns a single campaign and its API endpoints.
+
+GET /api-endpoints
+
+Returns all detected API URLs.
+
+POST /scrape
+
+Triggers manual rescraping (useful for debugging).
+
+6. Scheduler (cron)
+
+Run every 12 hours:
+
+Re-scrape homepage
+
+Re-scrape all campaigns
+
+Update JSON files
+
+7. Error Handling
+
+Retry failed requests up to 3 times
+
+Delay between retries: 1000 ms
+
+Graceful handling of:
+
+Missing selectors
+
+Missing images
+
+Missing APIs
+
+Broken URLs
+
+8. Request Headers
+
+Use a proper User-Agent for all requests:
+
+Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+
+
+Prevents A101 from blocking the scraper.
+
+9. Logging System
+
+Log the following to console or file:
+
+Homepage scraping started/finished
+
+Campaign scraping started/finished
+
+Selector failures
+
+API detection results
+
+Cronjob executions
