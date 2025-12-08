@@ -5,9 +5,8 @@ const path = require('path');
 const logger = require('../utils/logger');
 
 const A101_HOMEPAGE_URL = 'https://www.a101.com.tr/kapida';
-const A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='/kapida/']";
-const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='a101.com.tr/kapida/'] img";
-const A101_DIRECT_LINK_SELECTOR = "a[href*='a101.com.tr/kapida/'][href*='-']";
+const A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='kapida/']";
+const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='kapida/'] img";
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
@@ -72,6 +71,15 @@ async function scrapeHomepage() {
       logger.info(`Fallback selector found ${elements.length} elements`);
     }
     
+    const excludedPaths = [
+      '/kapida/kampanyalar',
+      '/kapida/hakkimizda',
+      '/kapida/sozlesmeler',
+      '/kapida/search',
+      '/kapida/sepetim',
+      '/kapida/hesabim',
+    ];
+    
     elements.each((index, element) => {
       try {
         const $el = $(element);
@@ -86,11 +94,18 @@ async function scrapeHomepage() {
         }
         
         let href = $link ? $link.attr('href') : null;
-        if (!href || !href.includes('/kapida/')) return;
+        if (!href || !href.includes('kapida/')) return;
         
         if (!href.startsWith('http')) {
           href = `https://www.a101.com.tr${href}`;
         }
+        
+        const isExcluded = excludedPaths.some(path => href.includes(path));
+        if (isExcluded) return;
+        
+        const urlPath = new URL(href).pathname;
+        const pathParts = urlPath.split('/').filter(Boolean);
+        if (pathParts.length < 2 || pathParts[1] === '') return;
         
         if (seenUrls.has(href)) return;
         seenUrls.add(href);
@@ -100,8 +115,7 @@ async function scrapeHomepage() {
         
         let title = imgAlt;
         if (!title) {
-          const urlParts = href.split('/').filter(Boolean);
-          const lastPart = urlParts[urlParts.length - 1];
+          const lastPart = pathParts[pathParts.length - 1];
           title = lastPart ? lastPart.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unknown Campaign';
         }
         
@@ -111,7 +125,7 @@ async function scrapeHomepage() {
         }
         
         campaigns.push({
-          id: `a101-${index + 1}`,
+          id: `a101-${campaigns.length + 1}`,
           market: 'A101',
           version: '1.0',
           campaignTitle: title,
