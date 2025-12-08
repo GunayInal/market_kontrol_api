@@ -1,0 +1,16 @@
+{
+  "name": "a101-scraper-server",
+  "version": "1.0.0",
+  "description": "A Node.js scraper and REST API server for A101 supermarket campaigns",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
+    "express": "^4.22.1",
+    "node-cron": "^3.0.3"
+  }
+}
