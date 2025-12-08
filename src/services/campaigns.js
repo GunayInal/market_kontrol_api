@@ -61,34 +61,15 @@ async function scrapeAll() {
   
   try {
     const campaigns = await a101Scraper.scrapeHomepage();
-    
-    const scrapedCampaigns = [];
-    for (const campaign of campaigns) {
-      const detailed = await a101Scraper.scrapeCampaignPage(campaign);
-      scrapedCampaigns.push(detailed);
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    
-    campaignsCache = scrapedCampaigns;
-    
-    apiEndpointsCache = scrapedCampaigns.flatMap(campaign => 
-      campaign.apiEndpoints.map(endpoint => ({
-        campaignId: campaign.id,
-        campaignTitle: campaign.campaignTitle,
-        endpoint,
-        detectedAt: new Date().toISOString(),
-      }))
-    );
+    campaignsCache = campaigns;
     
     await saveToFile(CAMPAIGNS_FILE, campaignsCache);
-    await saveToFile(API_ENDPOINTS_FILE, apiEndpointsCache);
     
-    logger.info(`Full scrape finished. ${campaignsCache.length} campaigns, ${apiEndpointsCache.length} API endpoints`);
+    logger.info(`Full scrape finished. ${campaignsCache.length} campaigns found`);
     
     return {
       success: true,
       campaignsCount: campaignsCache.length,
-      apiEndpointsCount: apiEndpointsCache.length,
     };
   } catch (error) {
     logger.error(`Full scrape failed: ${error.message}`);

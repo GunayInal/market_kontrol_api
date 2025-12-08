@@ -22,8 +22,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       'GET /campaigns': 'Returns all detected campaigns',
-      'GET /campaigns/:id': 'Returns a single campaign and its API endpoints',
-      'GET /api-endpoints': 'Returns all detected API URLs',
+      'GET /campaigns/:id': 'Returns a single campaign details',
       'POST /scrape': 'Triggers manual rescraping',
       'GET /status': 'Returns server and scraping status',
     },

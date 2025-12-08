@@ -42,23 +42,6 @@ router.get('/campaigns/:id', (req, res) => {
   }
 });
 
-router.get('/api-endpoints', (req, res) => {
-  try {
-    const endpoints = campaignsService.getAllApiEndpoints();
-    res.json({
-      success: true,
-      count: endpoints.length,
-      data: endpoints,
-    });
-  } catch (error) {
-    logger.error(`GET /api-endpoints failed: ${error.message}`);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to fetch API endpoints',
-    });
-  }
-});
-
 router.post('/scrape', async (req, res) => {
   try {
     if (campaignsService.isScrapingActive()) {
