@@ -1,0 +1,81 @@
+Non-campaign product page (_p URLs)
+href="https://www.a101.com.tr/kapida/..._p-11000229"
+
+
+Differences vs campaign cards:
+
+URL contains _p- → this indicates a single product, not a campaign.
+
+Nested structure includes price, discount badges, h3 titles → typical product card.
+
+Class names contain product-container → product, not a campaign.
+
+Campaign cards do not have _p- in URL.
+
+Campaign cards usually go directly to /kapida/<campaign-slug>.
+
+✅ Rule: Skip any <a> where href contains _p- or /product/.
+
+2️⃣ Banner / informational link
+<a class="w-full" title="En Yakın Mağazalar" href="/en-yakin-magazalar">
+
+
+Differences:
+
+URL does not contain /kapida/ → not a campaign.
+
+Usually links to static pages or informational pages (stores, services, etc.).
+
+Often contains full-width images, not slider swiper-slide elements.
+
+✅ Rule: Only consider <a> inside a swiper-slide whose href contains /kapida/.
+
+3️⃣ Poster / flyer link
+<a class="flex cursor-pointer flex-1" href="/afisler-hadi">
+
+
+Differences:
+
+URL does not contain /kapida/.
+
+Wrapped in rounded divs with aspect ratios like aspect-[368/100] → poster, not product/campaign.
+
+Usually contains dates as text, like “6-12 Aralık”.
+
+Often not inside the main slider element.
+
+✅ Rule: Exclude <a> whose href does not match /kapida/.
+
+4️⃣ Campaign card (actual)
+<div class="swiper-slide ...">
+  <a href="https://www.a101.com.tr/kapida/haftanin-yildizlari">
+    <img src="...jpg" />
+  </a>
+</div>
+
+
+Key identifying features:
+
+Inside a swiper-slide div (slider carousel).
+
+<a> href contains /kapida/, but no _p-.
+
+Direct image <img> shows campaign visual.
+
+Optional: can infer title from URL slug.
+
+✅ Rule for campaigns:
+
+div.swiper-slide a[href*="/kapida/"]:not([href*="_p-"])
+
+✅ Summary / Filtering Strategy
+
+Only consider <a> inside a swiper-slide.
+
+href must contain /kapida/.
+
+href must NOT contain _p- (single products).
+
+Ignore links outside slider or banners (/en-yakin-magazalar, /afisler-hadi, etc.).
+
+Optional: verify <img> exists inside <a> to ensure visual content.
