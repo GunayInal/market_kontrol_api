@@ -6,7 +6,8 @@ const logger = require('../utils/logger');
 
 const A101_HOMEPAGE_URL = 'https://www.a101.com.tr/kapida';
 const A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='/kapida/']";
-const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='/kapida/'] img";
+const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='a101.com.tr/kapida/'] img";
+const A101_DIRECT_LINK_SELECTOR = "a[href*='a101.com.tr/kapida/'][href*='-']";
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
