@@ -6,7 +6,8 @@ const logger = require('../utils/logger');
 
 const A101_HOMEPAGE_URL = 'https://www.a101.com.tr';
 const A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='/kapida/']";
-const A101_CAMPAIGN_FALLBACK_SELECTOR = "div.swiper-slide a[href*='kapida/'] img";
+const A101_CAMPAIGN_CARD_SELECTOR = "a[href*='/kapida/'][class*='rounded-2xl']";
+const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='/kapida/'] img";
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
@@ -63,10 +64,16 @@ async function scrapeHomepage() {
     const seenUrls = new Set();
     
     let elements = $(A101_CAMPAIGN_SLIDER_SELECTOR);
-    logger.info(`Primary selector found ${elements.length} elements`);
+    logger.info(`Slider selector found ${elements.length} elements`);
+    
+    const cardElements = $(A101_CAMPAIGN_CARD_SELECTOR);
+    logger.info(`Card selector found ${cardElements.length} elements`);
+    
+    elements = elements.add(cardElements);
+    logger.info(`Combined selectors found ${elements.length} elements`);
     
     if (elements.length === 0) {
-      logger.warn('Primary selector failed, trying fallback selector');
+      logger.warn('Primary selectors failed, trying fallback selector');
       elements = $(A101_CAMPAIGN_FALLBACK_SELECTOR);
       logger.info(`Fallback selector found ${elements.length} elements`);
     }
