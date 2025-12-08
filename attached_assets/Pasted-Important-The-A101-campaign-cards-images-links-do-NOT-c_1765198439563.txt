@@ -1,0 +1,154 @@
+Important:
+The A101 campaign cards (images + links) do NOT come from the campaign page itself.
+They come from the A101 homepage:
+👉 https://www.a101.com.tr/
+
+The scraper must work in two separate stages.
+
+🔹 Stage 1: Scrape campaign cards from homepage (https://www.a101.com.tr/)
+
+On the homepage, campaigns are inside swiper slides.
+Each campaign looks like this (example you provided):
+
+<div class="swiper-slide ...">
+  <a href="https://www.a101.com.tr/kapida/haftanin-yildizlari">
+    <img src="https://cdn2.a101.com.tr/...jpg" />
+  </a>
+</div>
+
+✔ From each campaign element extract:
+
+campaignUrl → from <a href="...">
+
+imageUrl → from <img src="...">
+
+title (optional)
+
+A101 doesn't always put it in HTML
+
+So infer from URL:
+
+/haftanin-yildizlari → “Haftanın Yıldızları”
+
+✔ Selectors to use:
+
+Primary selector (swiper slides):
+
+div.swiper-slide a[href*="/kapida/"]
+
+
+Fallback selector (in case A101 changes classes):
+
+a[href*="/kapida/"] img
+
+✔ All campaign links must begin with:
+/kapida/
+
+
+Only these are campaign pages.
+
+🔹 Stage 2: Scrape campaign product APIs from the campaign page
+
+Once we have the campaign URL (example):
+
+https://www.a101.com.tr/kapida/haftanin-yildizlari
+
+
+The product list is NOT in HTML.
+The page loads products using multiple API calls as the user scrolls.
+
+Examples:
+
+Some campaigns call 2 APIs
+
+Others call 9 APIs, depending on product count
+
+✔ The scraper must:
+
+Load the campaign HTML
+
+Search for:
+
+window.__INITIAL_STATE__
+
+any JavaScript where A101 embeds JSON
+
+Extract all API endpoints used to load products
+
+Save all discovered API URLs in an array
+
+Example structure:
+
+{
+  "campaign": "Haftanın Yıldızları",
+  "url": "https://www.a101.com.tr/kapida/haftanin-yildizlari",
+  "image": "https://cdn2.a101.com.tr/...jpg",
+  "apiEndpoints": [
+    "https://api.a101.com.tr/v2/product/list?page=1&size=60&...",
+    "https://api.a101.com.tr/v2/product/list?page=2&size=60&...",
+    "https://api.a101.com.tr/v2/product/list?page=3&size=60&..."
+  ]
+}
+
+🔹 Summary — What You MUST Make Clear to Cursor
+✔ Campaign cards come ONLY from:
+
+https://www.a101.com.tr/
+
+✔ Campaign product data comes ONLY from APIs found inside the campaign page
+
+NOT from the HTML grid
+NOT from visible items
+NOT from virtual scroll items
+ONLY from API URLs hidden in scripts
+
+✔ We need two scrapers:
+
+Homepage → find campaigns
+
+Campaign page → extract API endpoints
+
+✅ Ready-to-Paste Directive for Cursor / Replit
+
+Here is the final version — copy/paste directly:
+
+Paste This:
+
+I want a two-stage A101 scraper. IMPORTANT: A101 campaign cards are NOT inside the campaign page. They come from the A101 homepage https://www.a101.com.tr/
+. Each campaign card is inside a swiper-slide, for example:
+
+<div class="swiper-slide ...">
+  <a href="https://www.a101.com.tr/kapida/haftanin-yildizlari">
+    <img src="https://cdn2.a101.com.tr/...jpg" />
+  </a>
+</div>
+
+
+Stage 1: Scrape the homepage and detect all campaign entries. Use selectors:
+
+div.swiper-slide a[href*="/kapida/"]
+
+fallback: a[href*="/kapida/"] img
+
+For each campaign extract:
+
+campaignUrl from the <a href>
+
+imageUrl from the <img src>
+
+title (infer from URL slug)
+
+Stage 2: For each campaign page (example: https://www.a101.com.tr/kapida/haftanin-yildizlari
+), load the HTML and look for API endpoints that load product data. These APIs appear in JavaScript, often inside window.INITIAL_STATE or embedded JSON. A101 uses infinite-scroll APIs, so there may be 1, 2, 5, or even 9 API requests depending on product count. Extract ALL API URLs.
+
+Output example:
+
+{
+  "campaign": "Haftanın Yıldızları",
+  "url": "...",
+  "image": "...",
+  "apiEndpoints": ["...", "...", "..."]
+}
+
+
+The scraper must NOT assume a fixed number of API calls. It must detect every API endpoint dynamically from the campaign HTML/JS.

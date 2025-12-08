@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const logger = require('../utils/logger');
 
-const A101_HOMEPAGE_URL = 'https://www.a101.com.tr/kapida';
+const A101_HOMEPAGE_URL = 'https://www.a101.com.tr';
 const A101_CAMPAIGN_SLIDER_SELECTOR = "div.swiper-slide a[href*='kapida/']";
 const A101_CAMPAIGN_FALLBACK_SELECTOR = "a[href*='kapida/'] img";
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -80,6 +80,12 @@ async function scrapeHomepage() {
       '/kapida/hesabim',
     ];
     
+    const excludedPatterns = [
+      /_p\s*\d+/i,
+      /dashboard-banner/i,
+      /banner-\d+/i,
+    ];
+    
     elements.each((index, element) => {
       try {
         const $el = $(element);
@@ -102,6 +108,9 @@ async function scrapeHomepage() {
         
         const isExcluded = excludedPaths.some(path => href.includes(path));
         if (isExcluded) return;
+        
+        const isExcludedPattern = excludedPatterns.some(pattern => pattern.test(href));
+        if (isExcludedPattern) return;
         
         const urlPath = new URL(href).pathname;
         const pathParts = urlPath.split('/').filter(Boolean);
