@@ -1,0 +1,277 @@
+{
+  "last_updated": "2025-12-11T10:32:38.776Z",
+  "bim_brochures": [
+    {
+      "title": "02 Aralık Salı",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/dc1d8b4d-e235-40ae-a351-a8db34646868.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_dc1d8b4d-e235-40ae-a351-a8db34646868.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/dc1d8b4d-e235-40ae-a351-a8db34646868.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_dc1d8b4d-e235-40ae-a351-a8db34646868.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/dbd35df4-142f-4474-ae5b-bd1105eca4b0.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_dbd35df4-142f-4474-ae5b-bd1105eca4b0.jpg"
+        },
+        {
+          "page_number": 4,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/f51583db-f854-43ce-8a19-714d715d7127.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_f51583db-f854-43ce-8a19-714d715d7127.jpg"
+        }
+      ]
+    },
+    {
+      "title": "05 Aralık Cuma",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/0bd44aa5-dac4-457f-9a9f-456eecf41f51.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_0bd44aa5-dac4-457f-9a9f-456eecf41f51.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/0bd44aa5-dac4-457f-9a9f-456eecf41f51.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_0bd44aa5-dac4-457f-9a9f-456eecf41f51.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/e8b08990-45aa-469c-bfbe-be30bf4ef95d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_e8b08990-45aa-469c-bfbe-be30bf4ef95d.jpg"
+        },
+        {
+          "page_number": 4,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/9ad72ee2-5983-4161-a26e-84bc4db7764d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_9ad72ee2-5983-4161-a26e-84bc4db7764d.jpg"
+        },
+        {
+          "page_number": 5,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/7bd4de11-5534-4190-8c4f-cb1e23bc1199.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_7bd4de11-5534-4190-8c4f-cb1e23bc1199.jpg"
+        },
+        {
+          "page_number": 6,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/cfd6a28c-75d4-4fa8-abd6-b46a8e9ce9dc.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_cfd6a28c-75d4-4fa8-abd6-b46a8e9ce9dc.jpg"
+        }
+      ]
+    },
+    {
+      "title": "09 Aralık Salı",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/cfd5c52c-7ca1-4b56-906c-fbf15de7b278.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_cfd5c52c-7ca1-4b56-906c-fbf15de7b278.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/cfd5c52c-7ca1-4b56-906c-fbf15de7b278.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_cfd5c52c-7ca1-4b56-906c-fbf15de7b278.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/fb897282-f934-4480-b2d5-34a97de20956.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_fb897282-f934-4480-b2d5-34a97de20956.jpg"
+        }
+      ]
+    },
+    {
+      "title": "12 Aralık Cuma",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/75635fd2-64f3-45c8-8568-12ec8c81e89b.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_75635fd2-64f3-45c8-8568-12ec8c81e89b.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/75635fd2-64f3-45c8-8568-12ec8c81e89b.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_75635fd2-64f3-45c8-8568-12ec8c81e89b.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/4508f4e9-8d47-4bd0-8440-d61e121c5fef.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_4508f4e9-8d47-4bd0-8440-d61e121c5fef.jpg"
+        },
+        {
+          "page_number": 4,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/b2760148-4d9e-4a18-b37d-d8d3c0254746.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_b2760148-4d9e-4a18-b37d-d8d3c0254746.jpg"
+        },
+        {
+          "page_number": 5,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/b39b6a7b-ac20-490e-8ba2-803347a8d7e5.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_b39b6a7b-ac20-490e-8ba2-803347a8d7e5.jpg"
+        },
+        {
+          "page_number": 6,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/f85d6e50-e0da-4dee-8e3b-bc3eecbd3ca8.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_f85d6e50-e0da-4dee-8e3b-bc3eecbd3ca8.jpg"
+        },
+        {
+          "page_number": 7,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/f43055a1-bde4-45a5-aeb7-a179c16fb2ec.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_f43055a1-bde4-45a5-aeb7-a179c16fb2ec.jpg"
+        }
+      ]
+    },
+    {
+      "title": "16 Aralık Salı",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/ee72a349-c673-425f-9053-d6d471bf10de.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_ee72a349-c673-425f-9053-d6d471bf10de.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/ee72a349-c673-425f-9053-d6d471bf10de.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_ee72a349-c673-425f-9053-d6d471bf10de.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/ce71ca4d-8409-48d8-ad02-12142ea5fca8.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_ce71ca4d-8409-48d8-ad02-12142ea5fca8.jpg"
+        },
+        {
+          "page_number": 4,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/a54755c4-3377-450a-85be-fb1b6347ffb1.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_a54755c4-3377-450a-85be-fb1b6347ffb1.jpg"
+        }
+      ]
+    },
+    {
+      "title": "Gerçek-Sürekli İndirim",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/77af7d4b-44ee-4425-b8f7-abf1f28370c6.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_77af7d4b-44ee-4425-b8f7-abf1f28370c6.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/77af7d4b-44ee-4425-b8f7-abf1f28370c6.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_77af7d4b-44ee-4425-b8f7-abf1f28370c6.jpg"
+        }
+      ]
+    },
+    {
+      "title": "25 Kasım-22 Aralık",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/e057e23e-ffbe-4d5a-9037-ded7a8a4944c.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_e057e23e-ffbe-4d5a-9037-ded7a8a4944c.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/e057e23e-ffbe-4d5a-9037-ded7a8a4944c.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_e057e23e-ffbe-4d5a-9037-ded7a8a4944c.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/6f6600f2-eefa-4047-9140-6fa7e37d12fa.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_6f6600f2-eefa-4047-9140-6fa7e37d12fa.jpg"
+        }
+      ]
+    },
+    {
+      "title": "06-12 Aralık",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/20d5a2e1-5dfb-42a3-bb37-3a9aa27f271d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_20d5a2e1-5dfb-42a3-bb37-3a9aa27f271d.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/20d5a2e1-5dfb-42a3-bb37-3a9aa27f271d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_20d5a2e1-5dfb-42a3-bb37-3a9aa27f271d.jpg"
+        }
+      ]
+    },
+    {
+      "title": "Fırsat Ürünleri",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/102b089b-3bc0-4454-8c43-28b03e5ecb1d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_102b089b-3bc0-4454-8c43-28b03e5ecb1d.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/102b089b-3bc0-4454-8c43-28b03e5ecb1d.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_102b089b-3bc0-4454-8c43-28b03e5ecb1d.jpg"
+        }
+      ]
+    },
+    {
+      "title": "03 Aralık Çarşamba",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/3ffcc84a-da2c-4a4d-9b9d-0a9f19186131.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_3ffcc84a-da2c-4a4d-9b9d-0a9f19186131.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/3ffcc84a-da2c-4a4d-9b9d-0a9f19186131.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_3ffcc84a-da2c-4a4d-9b9d-0a9f19186131.jpg"
+        }
+      ]
+    },
+    {
+      "title": "10 Aralık Eve Teslim",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/b39c8863-db38-44a4-8c8f-c70abc8c6eaf.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_b39c8863-db38-44a4-8c8f-c70abc8c6eaf.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/b39c8863-db38-44a4-8c8f-c70abc8c6eaf.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_b39c8863-db38-44a4-8c8f-c70abc8c6eaf.jpg"
+        },
+        {
+          "page_number": 3,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/70c97f89-67ae-40e4-a74f-e5e393a49cf4.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_70c97f89-67ae-40e4-a74f-e5e393a49cf4.jpg"
+        }
+      ]
+    },
+    {
+      "title": "17 Aralık Çarşamba",
+      "link": "https://www.bim.com.tr/Categories/680/afisler.aspx",
+      "pages": [
+        {
+          "page_number": 1,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/519024c8-9cf5-426b-811a-d3eb7411c68b.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_519024c8-9cf5-426b-811a-d3eb7411c68b.jpg"
+        },
+        {
+          "page_number": 2,
+          "image_url": "https://cdn1.bim.com.tr/uploads/afisler/519024c8-9cf5-426b-811a-d3eb7411c68b.jpg",
+          "thumbnail_url": "https://cdn1.bim.com.tr/uploads/afisler/k_519024c8-9cf5-426b-811a-d3eb7411c68b.jpg"
+        }
+      ]
+    }
+  ]
+}
