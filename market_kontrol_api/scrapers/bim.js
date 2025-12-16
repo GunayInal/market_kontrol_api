@@ -1,16 +1,16 @@
 
 
+// BİM.js - Express Uyumlu Final Versiyon
+
 // Gerekli Kütüphaneleri İçe Aktar
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import fs from 'fs/promises'; // <-- Burayı kontrol edin ve fs/promises kullandığınızdan emin olun
-import https from 'https';
-// ...
+// import fs from 'fs/promises'; // 🚨 KALDIRILDI - Express sunucusu yazacak
+import https from 'https'; 
 
-//sabitler
-
+// Sabitler
 const URL_BIM_BROCHURES = 'https://www.bim.com.tr/Categories/680/afisler.aspx';
-const URL_BIM_MAIN = 'https://www.bim.com.tr/'; // Ürünler buradan çekilecek
+const URL_BIM_MAIN = 'https://www.bim.com.tr/';
 const BASE_URL = 'https://www.bim.com.tr';
 
 // Axios yapılandırması (SSL kontrolü devre dışı bırakıldı)
@@ -18,7 +18,7 @@ const config = {
     headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     },
-    // Sertifika hatasını çözmek için eklenen kısım
+    // Sertifika hatasını çözmek için eklenen kısım (Gerekiyorsa tutulabilir)
     httpsAgent: new https.Agent({
         rejectUnauthorized: false
     })
@@ -208,74 +208,52 @@ async function scrapeBimProducts() {
     }
 }
 
-
-// ======================================================================
-// ANA ÇALIŞTIRMA FONKSİYONU
-// ======================================================================
-// bim.js içinde, main fonksiyonu (güncellenmiş)
-
 // ======================================================================
 // ANA ÇALIŞTIRMA FONKSİYONU (KONSOLDA ÜRÜN GÖSTERİMİ EKLENDİ)
 // ======================================================================
 async function main() {
-    const brochures = await scrapeBimBrochures();
-    const products = await scrapeBimProducts(); 
+    console.log(`\n============================================`);
+    console.log(`## 🛒 BİM Veri Çekimi Başladı`);
+    console.log(`============================================`);
 
-    // NIHAI JSON YAPISINI OLUŞTURMA (Kaydetme kısmı şimdilik pasif)
-    const brochureData = {
-        last_updated: new Date().toISOString(),
-        bim_brochures: brochures
-    };
+    let brochures = [];
+    let products = [];
+    let error = null;
 
-    const productData = { 
+    try {
+        // Broşürleri ve Ürünleri Asenkron Çek
+        brochures = await scrapeBimBrochures();
+        products = await scrapeBimProducts();
+
+    } catch (e) {
+        error = e.message;
+        console.error('BİM genel veri çekme hatası:', error);
+    }
+
+    // NIHAI JSON YAPISINI OLUŞTURMA
+    const finalDataStructure = {
         last_updated: new Date().toISOString(),
+        bim_brochures: brochures,
         bim_products: products
     };
 
-    // --- KONSOLA YAZDIRMA (İSTENEN ADIM) ---
-    console.log('\n======================================================');
-    console.log('## 📦 ÇEKİLEN ÜRÜNLER ÖN İZLEME (İlk 5 Ürün)');
-    console.log('======================================================');
-
-    if (products.length > 0) {
-        // Tüm ürünleri değil, sadece ilk 5'ini yazdırıyoruz (Konsolu doldurmamak için)
-        products.slice(0, 5).forEach((product, index) => {
-            console.log(`[#${index + 1}] ${product.title}`);
-            console.log(`      Fiyat: ${product.price} ${product.currency}`);
-            console.log(`      Link: ${product.link.substring(0, 70)}...`);
-            console.log(`      Detay: ${product.detail}`);
-            console.log('---');
-        });
-        console.log(`...ve toplam ${products.length - 5} ürün daha var.`);
-    } else {
-        console.log("⚠️ API'den hiç ürün çekilemedi!");
-    }
-    // ------------------------------------
-
-    // JSON dosyalarını kaydetme (Bu kısmı tekrar deniyoruz, başarısız olursa konsola yazılır)
-    try {
-        // 1. Broşürler Kaydediliyor
-        await fs.writeFile('bim_broşürler.json', JSON.stringify(brochureData, null, 2));
-        console.log('\n✅ BİM Broşür verisi "bim_broşürler.json" dosyasına kaydedildi.');
-
-        // 2. Ürünler Kaydediliyor
-        await fs.writeFile('bim_aktuel_urunler.json', JSON.stringify(productData, null, 2));
-        console.log('✅ BİM Aktüel Ürünler verisi "bim_aktuel_urunler.json" dosyasına kaydedildi.');
-
-    } catch (fileError) {
-         // Eğer burada bir hata alırsak, en azından konsolda göreceğiz.
-         console.error('\n⚠️ JSON dosyasına yazma hatası (Lütfen dosya izinlerini kontrol edin):', fileError.message);
-    }
-
-    // Konsol özeti
+    // --- KONSOLA YAZDIRMA (Özet) ---
     console.log('\n======================================================');
     console.log('## 💾 İŞLEM TAMAMLANDI: BİM ÖZET');
     console.log('======================================================');
     console.log(`Toplam Broşür Sayısı: ${brochures.length}`);
-    console.log(`Toplam Ürün Sayısı (API'den): ${products.length}`);
-    console.log('\n✅ BİM İşlemi Tamamlandı.');
+    console.log(`Toplam Aktüel Ürün Sayısı: ${products.length}`);
+    console.log('\n✅ BİM İşlemi Tamamlandı (Veri Döndürüldü).');
+
+    // Express'e döndürülecek obje
+    return { 
+        totalBrochures: brochures.length,
+        totalProducts: products.length, 
+        fullData: finalDataStructure,
+        error: error
+    };
 }
 
 
-
+// Express sunucusunun çağıracağı isimle dışa aktar
 export { main as runBimScraper };
