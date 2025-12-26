@@ -1,188 +1,217 @@
-// server.js
 import express from 'express';
-import fs from 'fs/promises';
-import path from 'path';
+import pkg from 'pg';
+const { Pool } = pkg;
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { runAllScrapers } from './scraper_manager.js';
 
-// Scraper Modüllerini içe aktar
-// Not: A101 ve Bim'in de ESM yapısında (export) olduğunu varsayıyoruz.
-import { runGratisScraper } from './scrapers/gratis.js';
-import { runA101Scraper } from './scrapers/a101.js';
-import { runBimScraper } from './scrapers/bim.js'; 
-import { runMigrosScraper } from './scrapers/migros.js';
-import { runMetroScraper } from './scrapers/metro.js';
+// Oracle VM'de .env dosyasını okuyabilmesi için
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(process.cwd(), 'data');
 
+// CORS ayarı: Frontend/Mobil App erişimi için kritik
+app.use(cors());
 app.use(express.json());
 
-// ======================================================================
-// 📌 1. VERİ GÜNCELLEME (Scraping) ROTASI (Admin/Manuel Tetikleme)
-// ======================================================================
-// Bu rota, tüm market verilerini çekip 'data/' klasörüne kaydeder.
-app.get('/admin/update-all-data', async (req, res) => {
-    console.log("-----------------------------------------");
-    console.log("--- 🔄 TÜM MARKET VERİLERİ GÜNCELLENİYOR ---");
-    console.log("-----------------------------------------");
+// Veritabanı Havuzu (Bağlantı Sınırlarını Yönetmek İçin)
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }, // Oracle VM'den uzak DB'ye bağlanıyorsan gerekebilir
+    max: 20,
+    idleTimeoutMillis: 30000
+});
 
+// Health Check (Oracle Load Balancer veya Uptime takibi için)
+app.get('/', (req, res) => {
+    res.json({ status: 'online', message: 'Market Kontrol API is running on Oracle Cloud' });
+});
+
+// ======================================================================
+// 📌 1. MERKEZİ GÜNCELLEME ROTASI
+// ======================================================================
+app.get('/admin/update-all-db', async (req, res) => {
+    console.log("--- 🔄 TÜM MARKET VERİTABANI GÜNCELLENİYOR ---");
     try {
-        // --- 1. MIGROS ---
-        const migrosResult = await runMigrosScraper();
-        const migrosFilePath = path.join(DATA_DIR, 'migros_veri.json');
-        await fs.writeFile(migrosFilePath, JSON.stringify(migrosResult.fullData, null, 2));
-        console.log(`\n✅ Migros verisi kaydedildi. Toplam Ürün: ${migrosResult.totalProducts}, Toplam Kampanya: ${migrosResult.totalCampaigns}`);
-        
-        // --- 4. METRO MARKET --- 🚨 YENİ EKLENDİ
-        const metroResult = await runMetroScraper();
-        const metroFilePath = path.join(DATA_DIR, 'metro_veri.json');
-        await fs.writeFile(metroFilePath, JSON.stringify(metroResult.fullData, null, 2));
-        summary.Metro = `${metroResult.totalBrochures} broşür çekildi.`;
-        console.log(`\n✅ Metro verisi kaydedildi. Toplam Broşür: ${metroResult.totalBrochures}`);
-        
-        // --- 3. GRATIS ---
-        const gratisResult = await runGratisScraper();
-        const gratisFilePath = path.join(DATA_DIR, 'gratis_veri.json');
-        await fs.writeFile(gratisFilePath, JSON.stringify(gratisResult.fullData, null, 2));
-        console.log(`\n✅ Gratis verisi kaydedildi. Toplam Ürün: ${gratisResult.totalProducts}`);
-
-
-        // --- 4. A101 --- 🚨 YENİ EKLENDİ
-        const a101Result = await runA101Scraper();
-        const a101FilePath = path.join(DATA_DIR, 'a101_veri.json');
-        await fs.writeFile(a101FilePath, JSON.stringify(a101Result.fullData, null, 2));
-        console.log(`\n✅ A101 verisi kaydedildi. Toplam Ürün: ${a101Result.totalProducts}`);
-
-
-        // --- 5. BIM --- 🚨 YENİ EKLENDİ
-        const bimResult = await runBimScraper();
-        const bimFilePath = path.join(DATA_DIR, 'bim_veri.json');
-        await fs.writeFile(bimFilePath, JSON.stringify(bimResult.fullData, null, 2));
-        console.log(`\n✅ BİM verisi kaydedildi. Toplam Ürün: ${bimResult.totalProducts}, Toplam Broşür: ${bimResult.totalBrochures}`);
-
-
-res.status(200).json({
+        const summary = await runAllScrapers();
+        res.status(200).json({
             status: 'success',
-            message: 'Tüm market verileri başarıyla çekildi ve depolandı.',
-            summary: {
-                Gratis: `${gratisResult.totalProducts} ürün çekildi.`,
-                A101: `${a101Result.totalProducts} ürün çekildi. (API ürünleri atlandı)`,
-                BIM: `${bimResult.totalProducts} ürün ve ${bimResult.totalBrochures} broşür çekildi.`
-            }
+            message: 'Veritabanı güncelleme işlemi tamamlandı.',
+            summary: summary
         });
     } catch (error) {
-        console.error('Kritik veri güncelleme hatası:', error);
-        res.status(500).json({ status: 'error', message: 'Veri çekiminde sunucu hatası.' });
+        console.error('Kritik güncelleme hatası:', error);
+        res.status(500).json({ status: 'error', message: 'Güncelleme sırasında hata oluştu.' });
+    }
+});
+
+// ======================================================================
+// 📌 2. BROŞÜR API ROTASI (İstediğin Özel Mantıkla)
+// ======================================================================
+
+/**
+ * Markete göre broşürleri getirir.
+ * Şartlar: 
+ * 1. Kapak fotoğrafı (cover_image) 1. sayfadan alınır.
+ * 2. Her broşür objesi içinde 'pages' dizisiyle tüm sayfaları döner.
+ */
+app.get('/api/v1/brochures/:storeSlug', async (req, res) => {
+    const { storeSlug } = req.params;
+
+    try {
+        const query = `
+            SELECT 
+                b.id, 
+                b.title, 
+                b.link,
+                b.created_at,
+                s.name as store_name,
+                -- Şart 1: Kapak fotoğrafı olarak 1. sayfayı seçiyoruz
+                (SELECT image_url FROM brochure_pages WHERE brochure_id = b.id ORDER BY page_number ASC LIMIT 1) as cover_image,
+                -- Şart 2: Tüm sayfaları bir dizi (array) içinde döndürüyoruz
+                COALESCE(
+                    (SELECT json_agg(p ORDER BY p.page_number ASC)
+                     FROM (
+                        SELECT page_number, image_url 
+                        FROM brochure_pages 
+                        WHERE brochure_id = b.id
+                     ) p
+                    ), '[]'
+                ) as pages
+            FROM brochures b
+            JOIN stores s ON b.store_id = s.id
+            WHERE s.slug = $1
+            ORDER BY b.created_at DESC;
+        `;
+
+        const result = await pool.query(query, [storeSlug]);
+
+        res.json({ 
+            status: 'success', 
+            count: result.rows.length,
+            market: storeSlug.toUpperCase(),
+            data: result.rows 
+        });
+    } catch (error) {
+        console.error('Broşür getirme hatası:', error);
+        res.status(500).json({ status: 'error', message: error.message });
     }
 });
 
 
-// ======================================================================
-// 📌 2. VERİ OKUMA (READ) ROTASI: TÜM MARKETLER
-// ======================================================================
+// Belirli bir marketin kampanya listesini getirir
+app.get('/api/v1/campaigns/:storeSlug', async (req, res) => {
+    const { storeSlug } = req.params;
 
-// Yardımcı fonksiyon: JSON dosyasını okur ve içeriğini döndürür
-const readDataFile = async (fileName) => {
-    const filePath = path.join(DATA_DIR, fileName);
     try {
-        const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        // Dosya bulunamazsa (ilk çalıştırmada normaldir) veya okuma hatası olursa
-        if (error.code === 'ENOENT') {
-            console.warn(`⚠️ Veri dosyası bulunamadı: ${fileName}`);
-            return { error: `Veri bulunamadı. Lütfen önce /admin/update-all-data rotasını çalıştırın.` };
+        const query = `
+            SELECT 
+                c.id, 
+                c.title, 
+                c.image_url,
+                c.created_at,
+                s.name as store_name,
+                -- Kampanyaya ait toplam ürün sayısını merak eden kullanıcılar için
+                (SELECT COUNT(*) FROM products WHERE campaign_id = c.id) as product_count
+            FROM campaigns c
+            JOIN stores s ON c.store_id = s.id
+            WHERE s.slug = $1
+            ORDER BY c.created_at DESC;
+        `;
+
+        const { rows } = await pool.query(query, [storeSlug]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ 
+                success: false, 
+                message: `${storeSlug} için kampanya bulunamadı.` 
+            });
         }
-        throw error; // Diğer hataları yukarı fırlat
-    }
-};
 
-
-// 1. TÜM MARKET VERİLERİNİ TEK BİR ROTADA TOPLAMA
-app.get('/api/v1/all-markets', async (req, res) => {
-    try {
-        // 📌 EKLEME: migros_veri.json
-        const [migrosData, gratisData, a101Data, bimData,metroData] = await Promise.all([
-            readDataFile('metro_veri.json'),
-            readDataFile('migros_veri.json'),
-            readDataFile('gratis_veri.json'),
-            readDataFile('a101_veri.json'),
-            readDataFile('bim_veri.json')
-        ]);
-
-        res.status(200).json({
+        res.json({
             status: 'success',
-            last_updated: new Date().toISOString(),
-            data: {
-                metro: metroData,
-                migros: migrosData, 
-                gratis: gratisData,
-                a101: a101Data,
-                bim: bimData
-            }
+            market: storeSlug.toUpperCase(),
+            count: rows.length,
+            data: rows
         });
+
     } catch (error) {
-        console.error('API /all-markets hatası:', error);
-        res.status(500).json({ status: 'error', message: 'Sunucuda veri okuma hatası.' });
+        console.error('Kampanya listesi hatası:', error);
+        res.status(500).json({ status: 'error', message: error.message });
     }
 });
 
+// Kampanyaya ait TÜM detaylı ürün verilerini döndüren API ucu
+app.get('/api/v1/campaign-products/:campaignId', async (req, res) => {
+    const { campaignId } = req.params;
 
-// 2. MARKETE ÖZEL VERİ OKUMA ROTASI (Migros Eklendi)
-
-app.get('/api/v1/:marketName', async (req, res) => {
-    const marketName = req.params.marketName.toLowerCase();
-    let fileName = '';
-
-    switch (marketName) {
-        case 'migros': 
-            fileName = 'migros_veri.json';
-            break;
-        case 'metro': 
-            fileName = 'metro_veri.json';
-            break;
-        case 'gratis':
-            fileName = 'gratis_veri.json';
-            break;
-        case 'a101':
-            fileName = 'a101_veri.json';
-            break;
-        case 'bim':
-            fileName = 'bim_veri.json';
-            break;
-        default:
-            return res.status(404).json({ status: 'error', message: 'Geçersiz market adı.' });
-    }
-
-    // ... (Veri okuma ve yanıt kısmı aynı kalır)
     try {
-        const data = await readDataFile(fileName);
-        res.status(200).json({
+        const query = `
+            SELECT 
+                p.*, -- Ürün tablosundaki tüm sütunlar (p1, p2 promosyonları dahil)
+                s.name as store_name,
+                s.slug as store_slug,
+                c.title as campaign_title,
+                -- Otomatik indirim yüzdesi hesaplama (regular_price varsa)
+                CASE 
+                    WHEN p.regular_price > 0 AND p.regular_price > p.price 
+                    THEN ROUND(((p.regular_price - p.price) / p.regular_price) * 100)
+                    ELSE 0 
+                END as discount_percentage
+            FROM products p
+            JOIN campaigns c ON p.campaign_id = c.id
+            JOIN stores s ON c.store_id = s.id
+            WHERE p.campaign_id = $1
+            ORDER BY p.price ASC;
+        `;
+
+        const { rows } = await pool.query(query, [campaignId]);
+
+        // Mobil tarafa daha temiz veri gitmesi için null kontrolü (isteğe bağlı)
+        res.json({
             status: 'success',
-            data: data
+            campaign_id: campaignId,
+            count: rows.length,
+            data: rows
         });
+
     } catch (error) {
-        res.status(500).json({ status: 'error', message: `Veri okuma hatası: ${error.message}` });
+        console.error('Kritik ürün API hatası:', error);
+        res.status(500).json({ 
+            status: 'error', 
+            message: 'Ürün detayları getirilirken bir hata oluştu.' 
+        });
     }
 });
 
-
 // ======================================================================
-// 🚀 SUNUCUYU BAŞLATMA
+// 📌 4. ÜRÜN API ROTASI
 // ======================================================================
-// server.js dosyasının en altındaki app.listen bloğu
 
-app.listen(PORT, () => {
-    console.log(`Sunucu http://localhost:${PORT} adresinde dinleniyor.`);
+app.get('/api/v1/products', async (req, res) => {
+    try {
+        const limit = req.query.limit || 50;
+        const result = await pool.query(`
+            SELECT p.*, s.name as store_name 
+            FROM products p
+            JOIN campaigns c ON p.campaign_id = c.id
+            JOIN stores s ON c.store_id = s.id
+            ORDER BY p.id DESC 
+            LIMIT $1
+        `, [limit]);
 
-    // Uygulama başlatıldığında, canlı ortamda (PORT 3000 değilse) ilk veri çekimini tetikleyebiliriz.
-    if (process.env.NODE_ENV === 'production' && PORT != 3000) {
-        // Canlı ortamda ilk açılışta veriyi çek ve dosyaları oluştur.
-        // Bu kısmı, performans için yorum satırı yapabiliriz.
-        /*
-        fetch(`http://localhost:${PORT}/admin/update-all-data`)
-            .then(() => console.log('Başlangıç verisi çekildi.'))
-            .catch(err => console.error('Başlangıç veri çekme hatası:', err));
-        */
+        res.json({ status: 'success', count: result.rows.length, data: result.rows });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
     }
+});
+
+app.use((req, res) => {
+    res.status(404).json({ error: 'Endpoint not found' });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📡 Public Access: http://<ORACLE_VM_IP>:${PORT}`);
 });
